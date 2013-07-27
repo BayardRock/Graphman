@@ -8,56 +8,61 @@ open System
 open System.Drawing
 open System.Windows.Forms
 
+let player  = Image.FromFile(@"D:\Working\Graphman\GraphMan\GraphMan\Images\pr.png")
+let pellet  = Image.FromFile(@"D:\Working\Graphman\GraphMan\GraphMan\Images\p.png")
+let wall    = Image.FromFile(@"D:\Working\Graphman\GraphMan\GraphMan\Images\bottom.png")
+let blank   = Image.FromFile(@"D:\Working\Graphman\GraphMan\GraphMan\Images\blank.png" )
+
 let render {World=world;Player=playerX,playerY,playerD;} = 
-  let tileSize    = 30 //TODO: tweak the tile size
+  let tileSize    = 13 //TODO: tweak the tile size
   let boardHeight = Array.length world 
   let boardWidth  = ((Array.map Array.length) >> Array.max) world
   let visWidth
      ,visHeight   = tileSize * boardWidth
-                  , tileSize * boardHeight
+                   ,tileSize * boardHeight
   let boardImage  = new Bitmap(visWidth,visHeight)
-  use borderPen   = new Pen(Brushes.Black,2.0f)
-  let borderRect  = Rectangle(1,1,visWidth - 2,visHeight - 2)
-  use graphics    = Graphics.FromImage boardImage
-    
-  let drawTile (x,y) tile =
-    let x1,y1 = tileSize * x,tileSize * y
-    let x2,y2 = x1 + tileSize,y1 + tileSize
-      
-    if x = playerX && y = playerY
-      then  graphics.DrawEllipse(borderPen,x1,y1,x2,y2)
-      else  match tile with
-            | Wall  -> graphics.DrawRectangle(borderPen,x1,y1,x2,y2)
-            | _     -> ()
+  use graphics    = Graphics.FromImage(boardImage)
 
-  // draw outer "bounds" of maze (with offset to prevent clipping)
-  graphics.DrawRectangle(borderPen,borderRect) 
-    
-  // loop through rows and cells, drawing the walls of each cell
-  world |> Array.iteri (fun y row  ->
-    row |> Array.iteri (fun x tile -> drawTile (x,y) tile))
-
+  for y in 0 .. boardHeight - 1 do
+    for x in 0 .. boardWidth - 1 do
+      let tile  = world.[y].[x] 
+      let img   = match tile with
+                  | Pellet  -> pellet
+                  | Start   -> player
+                  | Wall    -> wall
+                  | Empty   -> blank
+      graphics.DrawImage(img,x*tileSize,y*tileSize)
+  
   boardImage
 
 let [<Literal>] FAIL = -1
 let [<Literal>] OKAY =  0
 
-[<EntryPoint>]
-let main = function
-  | [| world |] -> 
-    let world' = """*****
+let world' = """*****
 *..c*
 *.*.*
 *...*
 *****"""
-    use visual  = (loadWorld >> render) world'
-    use viewer  = new Form(Text                  = "Maze Jam: Maze Viewer"
+
+let fakeAI = 
+  { new PlayerAI with
+      member __.Name = "I.R. Baboon"
+      member __.Decide(gameStat) = South }
+    
+[<EntryPoint>]
+let main = function
+  | [| world |] ->
+    let world   = loadWorld world'
+    use visual  = render world
+    use viewer  = new Form(Text                  = "GraphMan"
                           ,Width                 = visual.Width
                           ,Height                = visual.Height
                           ,BackColor             = Color.White
                           ,BackgroundImage       = visual
-                          ,BackgroundImageLayout = ImageLayout.Center)
-    Application.Run(viewer);
+                          ,BackgroundImageLayout = ImageLayout.Stretch)
+    Application.Run(viewer)
+    while true do 
+       viewer.BackgroundImage <- render (advanceOneTurn fakeAI world)
     OKAY
   | _ ->  printfn "usage: GraphMan <world>"
           FAIL

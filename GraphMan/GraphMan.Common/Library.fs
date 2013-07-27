@@ -28,7 +28,6 @@ let loadWorld (description: string) : GameState =
       Player      = getPlayer nodes
       PlayerScore = 0 }
 
-
 // TODO: Wrap around edges
 let internal applyPlayerBehavior (ai: PlayerAI) (state: GameState) =
     // Copy Gamestate before handing off to ensure the player doesn't change it

@@ -67,5 +67,5 @@ let internal checkPlayerInteractions (state: GameState) =
 
 let advanceOneTurn (ai: PlayerAI) (state: GameState) = 
     let postAIstate = applyPlayerBehavior ai state
-    let postCheckState = checkPlayerInteractions state
+    let postCheckState = checkPlayerInteractions postAIstate
     postCheckState

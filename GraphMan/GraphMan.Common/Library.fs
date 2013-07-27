@@ -4,27 +4,28 @@ open GraphMan.Common.Types
 open System
 
 let loadWorld (description: string) : GameState =
-    let lines = description.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.None)                
+    let lines = description.Split(Environment.NewLine.ToCharArray()
+                                 ,StringSplitOptions.RemoveEmptyEntries)                
     let nodes = 
-        lines |> Seq.mapi (fun i line -> 
-            line |> Seq.mapi (fun j c -> 
-                    match c with
-                    | 'c' -> Start
-                    | '.' -> Pellet
-                    | '*' -> Wall
-                    | c -> failwith (sprintf "Unexpected char in map: %c" c)
-                ) |> Seq.toArray 
-            ) |> Seq.toArray
+        [| for line in lines do 
+                yield [| for char in line do
+                            yield match char with
+                                  | 'c' -> Start
+                                  | '.' -> Pellet
+                                  | '*' -> Wall
+                                  | bad -> failwith (sprintf "Unexpected char in map: %c" bad) 
+                      |]
+        |]
 
     let getPlayer nodes = 
         let mutable player = 0,0,North
-        for i in 0 .. Array.length nodes do
-            for j in 0 .. Array.length nodes.[i] do
+        for i in 0 .. (Array.length nodes) - 1 do
+            for j in 0 .. (Array.length nodes.[i]) - 1 do
             if nodes.[i].[j] = Start then player <- i,j,North
         player
 
-    { World   = nodes
-      Player  = getPlayer nodes
+    { World       = nodes
+      Player      = getPlayer nodes
       PlayerScore = 0 }
 
 

@@ -24,8 +24,11 @@ let render {World=world;Player=playerX,playerY,playerD;} =
     let x1,y1 = tileSize * x,tileSize * y
     let x2,y2 = x1 + tileSize,y1 + tileSize
       
-    //TODO: ???
-    ()
+    if x = playerX && y = playerY
+      then  graphics.DrawEllipse(borderPen,x1,y1,x2,y2)
+      else  match tile with
+            | Wall  -> graphics.DrawRectangle(borderPen,x1,y1,x2,y2)
+            | _     -> ()
 
   // draw outer "bounds" of maze (with offset to prevent clipping)
   graphics.DrawRectangle(borderPen,borderRect) 
@@ -36,18 +39,25 @@ let render {World=world;Player=playerX,playerY,playerD;} =
 
   boardImage
 
-let [<Literal>] OKAY = 0
+let [<Literal>] FAIL = -1
+let [<Literal>] OKAY =  0
 
 [<EntryPoint>]
-let main argv = 
-  let world   = Load "*****\r\n*..c*\r\n*.*.*\r\n*...*\r\n*****"
-  use visual  = render world
-  use viewer  = new Form(Text                  = "Maze Jam: Maze Viewer"
-                        ,Width                 = visual.Width
-                        ,Height                = visual.Height
-                        ,BackColor             = Color.White
-                        ,BackgroundImage       = visual
-                        ,BackgroundImageLayout = ImageLayout.Center)
-  
-  viewer.Show()
-  OKAY
+let main = function
+  | [| world |] -> 
+    let world' = """*****
+*..c*
+*.*.*
+*...*
+*****"""
+    use visual  = (loadWorld >> render) world'
+    use viewer  = new Form(Text                  = "Maze Jam: Maze Viewer"
+                          ,Width                 = visual.Width
+                          ,Height                = visual.Height
+                          ,BackColor             = Color.White
+                          ,BackgroundImage       = visual
+                          ,BackgroundImageLayout = ImageLayout.Center)
+    Application.Run(viewer);
+    OKAY
+  | _ ->  printfn "usage: GraphMan <world>"
+          FAIL

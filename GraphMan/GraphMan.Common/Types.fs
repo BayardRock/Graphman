@@ -3,6 +3,9 @@
 open System
 open System.Text
 
+module Vals = 
+    let PelletPoints = 10
+
 type Node = 
     | Empty
     | Pellet
@@ -30,6 +33,7 @@ type GameState =
     {
         World : Node [][]
         Player: int * int * Direction
+        PlayerScore: int
     }
 
 type PlayerAI = 

@@ -3,6 +3,8 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "GraphMan.Common", "GraphMan.Common\GraphMan.Common.fsproj", "{61CA566D-FA44-45C9-AF78-2C6A101DD0A6}"
 EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "GraphMan", "GraphMan\GraphMan.fsproj", "{A1171A59-024E-4CE4-BBF9-136B2B9E6369}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -13,6 +15,10 @@ Global
 		{61CA566D-FA44-45C9-AF78-2C6A101DD0A6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{61CA566D-FA44-45C9-AF78-2C6A101DD0A6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{61CA566D-FA44-45C9-AF78-2C6A101DD0A6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A1171A59-024E-4CE4-BBF9-136B2B9E6369}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A1171A59-024E-4CE4-BBF9-136B2B9E6369}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A1171A59-024E-4CE4-BBF9-136B2B9E6369}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A1171A59-024E-4CE4-BBF9-136B2B9E6369}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -32,6 +32,7 @@ type Direction =
 type GameState = 
     {
         World : Node [][]
+        // X, Y, Player Facing
         Player: int * int * Direction
         PlayerScore: int
     }

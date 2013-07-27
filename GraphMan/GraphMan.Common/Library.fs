@@ -33,6 +33,8 @@ let internal applyPlayerBehavior (ai: PlayerAI) (state: GameState) =
     // Copy Gamestate before handing off to ensure the player doesn't change it
     let stateCopy = { state with World = state.World |> Array.map (Array.copy) }
     let decision = ai.Decide(stateCopy)
+
+    // Convert player decision to offsets
     let onx, ony, _ = state.Player    
     let nnx, nny = 
         match decision with
@@ -41,9 +43,17 @@ let internal applyPlayerBehavior (ai: PlayerAI) (state: GameState) =
         | East -> onx - 1, ony
         | West -> onx + 1, ony
 
-    if    nny < 0 || nny > state.World.Length - 1 
-       || nnx < 0 || nnx > state.World.[nny].Length - 1 
-       || state.World.[nny].[nnx] = Wall 
+    // Test for wrap around and fix
+    let nny = if nny < 0 then state.World.Length - 1
+              elif nny > state.World.Length - 1 then 0
+              else nny
+
+    let nnx = if nnx < 0 then state.World.[nny].Length - 1
+              elif nnx > state.World.[nny].Length - 1 then 0
+              else nnx 
+
+    // Change position if the move is valid, always change direction
+    if state.World.[nny].[nnx] = Wall 
     then { state with Player = onx, ony, decision }
     else { state with Player = nnx, nny, decision }
     

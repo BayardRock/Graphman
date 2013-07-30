@@ -21,7 +21,9 @@ let loadWorld (description: string) : GameState =
         let mutable player = 0,0,North
         for i in 0 .. (Array.length nodes) - 1 do
             for j in 0 .. (Array.length nodes.[i]) - 1 do
-            if nodes.[i].[j] = Start then player <- i,j,North
+            if nodes.[i].[j] = Start then 
+              player <- i,j,North
+              nodes.[i].[j] <- Pellet
         player
 
     { World       = nodes

@@ -1,9 +1,54 @@
 ﻿module GraphMan.Common.Library
 
 open GraphMan.Common.Types
+open Microsoft.FSharp.Reflection
 open System
+open System.Reflection
 
-let loadWorld (description: string) : GameState =
+//MAYBE: take dir path instead of dll path
+let loadPlayerAI (assemblyPath: string) =
+
+  let (|Concrete|_|) (i:Type) (t:Type) = 
+    match i.IsGenericTypeDefinition 
+       && t.IsGenericType
+       && not <| t.ContainsGenericParameters
+       && t.GetGenericTypeDefinition() = i with
+    | false -> None
+    | true  -> Some t
+
+  let (|Interface|_|) (i:Type) (t:Type) = 
+    if t.IsInterface
+      then  match t with 
+            | Concrete i iface -> Some iface
+            | _                -> None
+      else  match t.GetInterface(i.FullName) with
+            | null  -> None
+            | iface -> Some iface
+
+  let (|IsPlayerAI|) t = 
+    let playerAI = typeof<PlayerAI>
+    match t with 
+    | Interface playerAI _  -> true
+    | _                     -> false
+
+  let (|HasDefaulCtor|) (t:Type) =
+    if t.GetConstructor(Type.EmptyTypes) <> null then true else false
+    
+  let loadClasses = Seq.filter(|IsPlayerAI|)
+                 >> Seq.filter(|HasDefaulCtor|)
+                 >> Seq.map   (Activator.CreateInstance)
+                 >> Seq.cast<PlayerAI>
+
+  let loadObjects = Seq.filter (FSharpType.IsModule)
+                 >> Seq.collect(fun t -> t.GetProperties())
+                 >> Seq.filter (fun p -> p.PropertyType = typeof<PlayerAI>)
+                 >> Seq.map    (fun p -> p.GetValue(null))
+                 >> Seq.cast<PlayerAI> 
+  
+  let allTypes = Assembly.LoadFile(assemblyPath).GetTypes()
+  Seq.concat [ loadClasses allTypes; loadObjects allTypes; ]
+
+let loadWorld (description: string)  =
     let lines = description.Split(Environment.NewLine.ToCharArray()
                                  ,StringSplitOptions.RemoveEmptyEntries)                
     let nodes = 
@@ -30,7 +75,7 @@ let loadWorld (description: string) : GameState =
       Player      = getPlayer nodes
       PlayerScore = 0 }
 
-// TODO: Wrap around edges
+//TODO: Wrap around edges
 let internal applyPlayerBehavior (ai: PlayerAI) (state: GameState) =
     // Copy Gamestate before handing off to ensure the player doesn't change it
     let stateCopy = { state with World = state.World |> Array.map (Array.copy) }
@@ -71,3 +116,9 @@ let advanceOneTurn (ai: PlayerAI) (state: GameState) =
     let postAIstate = applyPlayerBehavior ai state
     let postCheckState = checkPlayerInteractions postAIstate
     postCheckState
+
+let checkLevelComplete {World=world} =
+  world |> Seq.forall (fun row -> 
+    row |> Seq.forall (function | Wall 
+                                | Empty -> true 
+                                | _     -> false))

@@ -3,13 +3,35 @@
 open GraphMan.Common
 open GraphMan.Common.Library
 open GraphMan.Common.Types
+open GraphMan.Resources
 
 open System
 open System.Drawing
-open System.Windows.Forms
+open System.IO
 open System.Threading
+open System.Windows.Forms
+
+type Baboon() =
+  interface PlayerAI with
+    member __.Name = "I.R. Baboon"
+    member __.Decide(_) = West
 
 module Program =
+
+  (* _ TEST __________________________________________________________ *)
+
+  let weaselAI = 
+    let rand = Random()
+    { new PlayerAI with
+        member __.Name = "I.M. Weasel"
+        member __.Decide(gameStat) = 
+          match rand.Next(1,5) with
+          | 1 -> North
+          | 2 -> South
+          | 3 -> East
+          | _ -> West }
+
+  (* _________________________________________________________________ *)
 
   (* _ GRAPHICS ______________________________________________________ *)
 
@@ -61,11 +83,11 @@ module Program =
        ,visHeight     = tileSize * boardWidth
                        ,tileSize * boardHeight
     use buffer        = new Bitmap(visWidth,visHeight)
-    use viewer        = new Form(Text                  = "GraphMan"
-                                ,Width                 = visWidth
+    use viewer        = new GameViewer(
+                                 Width                 = visWidth
                                 ,Height                = visHeight
                                 ,BackgroundImage       = buffer
-                                ,BackgroundImageLayout = ImageLayout.Stretch)
+                                ,BackgroundImageLayout = ImageLayout.Center)
     viewer.Show()
     let rec loop state =
       Application.DoEvents()
@@ -79,35 +101,14 @@ module Program =
     //MAYBE: halt game until user-initated event?
     loop gameState
 
-  (* _ TEST __________________________________________________________ *)
-
-  let world' = "*****" + Environment.NewLine
-             + "*..c*" + Environment.NewLine
-             + "*.*.*" + Environment.NewLine
-             + "*...*" + Environment.NewLine
-             + "*****"
-
-  let fakeAI = 
-    let rand = Random()
-    { new PlayerAI with
-        member __.Name = "I.R. Baboon"
-        member __.Decide(gameStat) = 
-          match rand.Next(1,5) with
-          | 1 -> North
-          | 2 -> South
-          | 3 -> East
-          | _ -> West }
-
-  (* _________________________________________________________________ *)
-
   let [<Literal>] FAIL = -1
   let [<Literal>] OKAY =  0
 
   [<STAThread;EntryPoint>]
   let main = function
     | [| playerLib;worldDef; |] ->  
-      let player  = fakeAI  //TODO: loadPlayerAI playerLib
-      let world   = loadWorld world' //TODO: loadWorld worldDef
+      let player  = loadPlayerAI playerLib |> Seq.head
+      let world   = (File.ReadAllText >> loadWorld) worldDef
       runGame player world
       OKAY
     | _ -> printfn "usage: GraphMan <assembly> <world>"; FAIL

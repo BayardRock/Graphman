@@ -5,12 +5,12 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>a1171a59-024e-4ce4-bbf9-136b2b9e6369</ProjectGuid>
-    <OutputType>WinExe</OutputType>
-    <RootNamespace>GraphMan</RootNamespace>
-    <AssemblyName>GraphMan</AssemblyName>
+    <ProjectGuid>6f7de230-8b63-4f0f-8b3f-d40a4ea24a84</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>GraphMan.Samples</RootNamespace>
+    <AssemblyName>GraphMan.Samples</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
-    <Name>GraphMan</Name>
+    <Name>GraphMan.Samples</Name>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -20,10 +20,7 @@
     <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <WarningLevel>3</WarningLevel>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <DocumentationFile>bin\Debug\GraphMan.XML</DocumentationFile>
-    <Prefer32Bit>true</Prefer32Bit>
-    <StartArguments>"C:\Development\Graphman\GraphMan\GraphMan.Samples\bin\Debug\GraphMan.Samples.dll" "C:\Development\Graphman\GraphMan\GraphMan.Samples\simple.graph"</StartArguments>
+    <DocumentationFile>bin\Debug\GraphMan.Samples.XML</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -32,9 +29,7 @@
     <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <WarningLevel>3</WarningLevel>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <DocumentationFile>bin\Release\GraphMan.XML</DocumentationFile>
-    <Prefer32Bit>true</Prefer32Bit>
+    <DocumentationFile>bin\Release\GraphMan.Samples.XML</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="mscorlib" />
@@ -43,23 +38,17 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Drawing" />
     <Reference Include="System.Numerics" />
-    <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Program.fs" />
-    <None Include="App.config" />
+    <Compile Include="Samples.fs" />
+    <None Include="simple.graph" />
+    <None Include="Script.fsx" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\GraphMan.Common\GraphMan.Common.fsproj">
       <Name>GraphMan.Common</Name>
       <Project>{61ca566d-fa44-45c9-af78-2c6a101dd0a6}</Project>
-      <Private>True</Private>
-    </ProjectReference>
-    <ProjectReference Include="..\GraphMan.Resources\GraphMan.Resources.vbproj">
-      <Name>GraphMan.Resources</Name>
-      <Project>{5cbe87ec-4db0-420e-93a6-c9776df7607c}</Project>
       <Private>True</Private>
     </ProjectReference>
   </ItemGroup>

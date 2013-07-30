@@ -23,7 +23,7 @@ let loadWorld (description: string) : GameState =
             for j in 0 .. (Array.length nodes.[i]) - 1 do
             if nodes.[i].[j] = Start then 
               player <- i,j,North
-              nodes.[i].[j] <- Pellet
+              nodes.[i].[j] <- Pellet //TODO: is this correct?
         player
 
     { World       = nodes

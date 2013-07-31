@@ -101,7 +101,7 @@
       <DependentUpon>GameViewer.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="My Project\Resources.resx">
-      <Generator>VbMyResourcesResXFileCodeGenerator</Generator>
+      <Generator>PublicVbMyResourcesResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.vb</LastGenOutput>
       <CustomToolNamespace>My.Resources</CustomToolNamespace>
       <SubType>Designer</SubType>
@@ -123,6 +123,30 @@
   </ItemGroup>
   <ItemGroup>
     <Service Include="{94E38DFF-614B-4cbd-B67C-F211BB35CE8B}" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Blank.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\blank.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\bottom.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\dot.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\pd.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\pl.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\pr.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\pu.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

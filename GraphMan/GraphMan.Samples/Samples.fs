@@ -3,10 +3,10 @@
 open GraphMan.Common.Types
 open System
 
-//type Baboon() =
-//  interface PlayerAI with
-//    member __.Name = "I.R. Baboon"
-//    member __.Decide(_) = West
+type Baboon() =
+  interface PlayerAI with
+    member __.Name = "I.R. Baboon"
+    member __.Decide(_) = West
 
 module Library =
 

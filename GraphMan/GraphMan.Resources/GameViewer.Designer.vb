@@ -31,7 +31,9 @@ Partial Class GameViewer
     Me.scoreText = New System.Windows.Forms.TextBox()
     Me.scoreLabel = New System.Windows.Forms.Label()
     Me.startButton = New System.Windows.Forms.Button()
+    Me.gamePicture = New System.Windows.Forms.PictureBox()
     CType(Me.throttleUpDown,System.ComponentModel.ISupportInitialize).BeginInit
+    CType(Me.gamePicture,System.ComponentModel.ISupportInitialize).BeginInit
     Me.SuspendLayout
     '
     'loadPlayerButton
@@ -77,7 +79,7 @@ Partial Class GameViewer
     Me.throttleUpDown.Size = New System.Drawing.Size(49, 20)
     Me.throttleUpDown.TabIndex = 2
     Me.throttleUpDown.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
-    Me.throttleUpDown.Value = New Decimal(New Integer() {1000, 0, 0, 0})
+    Me.throttleUpDown.Value = New Decimal(New Integer() {100, 0, 0, 0})
     '
     'playerLabel
     '
@@ -104,6 +106,8 @@ Partial Class GameViewer
     Me.scoreText.ReadOnly = true
     Me.scoreText.Size = New System.Drawing.Size(100, 20)
     Me.scoreText.TabIndex = 3
+    Me.scoreText.Text = "0"
+    Me.scoreText.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
     '
     'scoreLabel
     '
@@ -126,11 +130,25 @@ Partial Class GameViewer
     Me.startButton.Text = "Start Game"
     Me.startButton.UseVisualStyleBackColor = true
     '
+    'gamePicture
+    '
+    Me.gamePicture.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom)  _
+            Or System.Windows.Forms.AnchorStyles.Left)  _
+            Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
+    Me.gamePicture.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
+    Me.gamePicture.Location = New System.Drawing.Point(11, 38)
+    Me.gamePicture.Name = "gamePicture"
+    Me.gamePicture.Size = New System.Drawing.Size(442, 206)
+    Me.gamePicture.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage
+    Me.gamePicture.TabIndex = 101
+    Me.gamePicture.TabStop = false
+    '
     'GameViewer
     '
     Me.AutoScaleDimensions = New System.Drawing.SizeF(6!, 13!)
     Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
     Me.ClientSize = New System.Drawing.Size(464, 281)
+    Me.Controls.Add(Me.gamePicture)
     Me.Controls.Add(Me.startButton)
     Me.Controls.Add(Me.scoreText)
     Me.Controls.Add(Me.scoreLabel)
@@ -145,6 +163,7 @@ Partial Class GameViewer
     Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
     Me.Text = "GraphMan"
     CType(Me.throttleUpDown,System.ComponentModel.ISupportInitialize).EndInit
+    CType(Me.gamePicture,System.ComponentModel.ISupportInitialize).EndInit
     Me.ResumeLayout(false)
     Me.PerformLayout
 
@@ -158,4 +177,5 @@ End Sub
     Public WithEvents playerText As System.Windows.Forms.TextBox
     Public WithEvents scoreText As System.Windows.Forms.TextBox
     Public WithEvents startButton As System.Windows.Forms.Button
+    Public WithEvents gamePicture As System.Windows.Forms.PictureBox
 End Class

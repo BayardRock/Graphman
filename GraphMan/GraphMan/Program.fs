@@ -12,14 +12,13 @@ open System.Threading
 open System.Windows.Forms
 
 module Program =
-  //TODO: bind player name to display
   //TODO: draw poster frame onto display
   //TODO: check for memory leaks on buffer image
   //TODO: enable game interrupt
   //TODO: enable game reset
 
   let playGame (viewer:GameViewer) (playerAI:PlayerAI) gameState =
-    let buffer = prepareBuffer gameState
+    use buffer = prepareBuffer gameState
     let render = renderFrame buffer
     viewer.gamePicture.Image <- buffer
 
@@ -36,27 +35,28 @@ module Program =
     
     loop gameState
 
-  let configureApp playerAI gameState =
+  let rec configureApp playerAI gameState =
     let playerAI  = ref playerAI
     let gameState = ref gameState
     let viewer    = new GameViewer()
     let win32View = viewer :> IWin32Window
                            |> Some
-
+    
     viewer.loadPlayerButton.Click.Add(fun _ -> 
       win32View 
       |> choosePlayerLib
-      |> Option.iter (loadPlayerAI
-                      >> choosePlayer win32View
-                      >> ((:=) playerAI)))
+      |> Option.iter (fun lib ->
+           playerAI := (loadPlayerAI >> choosePlayer win32View) lib
+           resetDisplay viewer playerAI))
     
     viewer.loadLevelButton.Click.Add(fun _ -> 
       win32View
       |> chooseLevelDef
-      |> Option.iter (loadLevelDef
-                      >> ((:=) gameState)))
+      |> Option.iter (fun lvl ->
+            gameState := loadLevelDef lvl
+            resetDisplay viewer playerAI))
 
-    viewer.startButton.Click.Add(fun _ -> 
+    viewer.startButton.Click.Add(fun _ ->             
       match !playerAI,!gameState with
       | Some playerAI 
        ,Some gameState -> playGame viewer playerAI gameState
@@ -67,11 +67,12 @@ module Program =
                              ,MessageBoxButtons.OK
                              ,MessageBoxIcon.Warning) 
                           |> ignore)
+    
+    resetDisplay viewer playerAI
     viewer
 
   (* _________________________________________________________________ *)
   
-  let [<Literal>] FAIL = -1
   let [<Literal>] OKAY =  0
 
   [<STAThread;EntryPoint>]
@@ -82,7 +83,7 @@ module Program =
     let playerAI,gameState =
       match args with
       | [| playerLib
-           levelDef |] -> choosePlayer None (loadPlayerLib playerLib)
+           levelDef |] -> choosePlayer None (loadPlayerAI playerLib)
                          ,loadLevelDef levelDef
       | _              -> None
                          ,None

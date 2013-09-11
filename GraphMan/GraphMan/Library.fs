@@ -12,6 +12,8 @@ type PlayerItem = { Key: string; Value: PlayerAI }
   with  override self.ToString() = self.Key
         static member New(ai:PlayerAI) = { Key=ai.Name; Value=ai; }
 
+let (<!) cell fn = fn !cell
+
 let (|Dimensions|) level = 
   let height  = Array.length level
   let width   = ((Array.map Array.length) >> Array.max) level
@@ -51,6 +53,13 @@ let choosePlayer parent players =
                         Some(player)
   | _               ->  None
 
-let loadPlayerLib = loadPlayerAI
-
 let loadLevelDef  = File.ReadAllText >> loadWorld >> Some
+
+let resetDisplay (viewer: GameViewer) (playerAI: PlayerAI option ref) =
+  let playerName =  match !playerAI with 
+                    | Some(ai)  -> ai.Name
+                    | None      -> ""
+  viewer.playerText.Text    <- playerName
+  viewer.scoreText.Text     <- string 0
+  viewer.gamePicture.Image  <- new System.Drawing.Bitmap(1,1)
+  //TODO: replace gamePictue default with poster frame
